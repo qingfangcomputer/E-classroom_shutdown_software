@@ -21,17 +21,11 @@ public:
 private slots:
     void onNewVersionAvailable(QString version);
     void onNoUpdatesAvailable();
-    void on_pushButton_clicked();
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();
     void on_pushButton_4_clicked();
 
     void on_commandLinkButton_clicked();
-
-    void on_commandLinkButton_2_clicked();
-
-    void on_commandLinkButton_3_clicked();
-
 private:
     Ui::MainWindow *ui;
     VersionChecker *m_versionChecker;

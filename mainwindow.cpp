@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(m_versionChecker, &VersionChecker::serverOffline, this, [=]() {
         // 显示错误消息，并在用户点击OK后退出应用
-        QMessageBox::critical(this, "服务不可用", "qingfangcomputer.com不在线，无法提供服务");
+        QMessageBox::critical(this, "服务不可用", "qingfangcomputer.com不在线，无法提供服务<br>或您没有连接到互联网！");
         // 退出应用
         QApplication::quit();
     });
@@ -53,27 +53,22 @@ MainWindow::~MainWindow()
 void MainWindow::setupUI()
 {
     // 设置窗口标题和大小
-    setWindowTitle("极域电子教室控制工具");
+    setWindowTitle("E-classroom_shutdown_software 3.0.5");
     setMinimumSize(600, 400);
+
+    // 创建背景标签并设置图片
+    QLabel* background = new QLabel(this);
+    background->setPixmap(QPixmap(":/wallpaper.jpg"));
+    background->setScaledContents(true);  // 图片自适应标签大小
+    background->setGeometry(0, 0, width(), height());  // 覆盖整个窗口
+
+    // 将背景标签置于底层（确保其他控件在上方）
+    background->lower();
 
     // 设置样式表 - 美化按钮和窗口
     QString styleSheet = R"(
         QMainWindow {
             background-color: #f0f0f0;
-        }
-        QPushButton, QCommandLinkButton {
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 6px;
-            padding: 8px 16px;
-            font-size: 14px;
-            border: none;
-        }
-        QPushButton:hover, QCommandLinkButton:hover {
-            background-color: #45a049;
-        }
-        QPushButton:pressed, QCommandLinkButton:pressed {
-            background-color: #3d8b40;
         }
         QLabel {
             font-size: 14px;

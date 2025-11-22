@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>818</width>
-    <height>453</height>
+    <width>800</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -94,22 +94,6 @@
      <string>单击此处---》</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>-50</y>
-      <width>821</width>
-      <height>541</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">image: url(:/013.jpg);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
@@ -143,7 +127,6 @@ font: 14pt &quot;Microsoft YaHei UI&quot;;</string>
      <string>关闭电子教室</string>
     </property>
    </widget>
-   <zorder>label_4</zorder>
    <zorder>label_5</zorder>
    <zorder>label_6</zorder>
    <zorder>label_9</zorder>
@@ -157,7 +140,7 @@ font: 14pt &quot;Microsoft YaHei UI&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>818</width>
+     <width>800</width>
      <height>20</height>
     </rect>
    </property>
