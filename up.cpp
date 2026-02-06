@@ -18,7 +18,7 @@ up::~up()
 
 void up::on_pushButton_clicked()
 {
-    QDesktopServices::openUrl(QUrl("https://github.com/qingfangcomputer/E-classroom_shutdown_software/releases/tag/Executable", QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl("https://github.com/qingfangcomputer/E-classroom_shutdown_software/releases", QUrl::TolerantMode));
 }
 
 void up::on_pushButton_2_clicked()

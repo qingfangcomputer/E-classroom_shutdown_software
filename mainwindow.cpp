@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_versionChecker, &VersionChecker::noUpdatesAvailable, this, &MainWindow::onNoUpdatesAvailable);
 
     m_versionChecker->checkServerAvailability();
-    m_versionChecker->checkForUpdates("4.0.0");
+    m_versionChecker->checkForUpdates("4.2.6");
     setupUI();
 }
 
@@ -230,11 +230,6 @@ void MainWindow::setupUI()
     setRandomBackground();
 
     QString styleSheet = R"(
-        QMainWindow {
-            background-color: transparent;
-            border: none;
-            margin: 0;
-        }
         QWidget#centralwidget {
             background: transparent;
             border: none;
@@ -276,18 +271,11 @@ void MainWindow::onNoUpdatesAvailable()
     // QMessageBox::information(this, "版本信息", "当前已是最新版本");
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_pushButton_3_clicked()
 {
     help *helpWindow = new help();
     helpWindow->setStyleSheet(this->styleSheet());
     helpWindow->show();
-}
-
-void MainWindow::on_pushButton_3_clicked()
-{
-    stop *stopWindow = new stop();
-    stopWindow->setStyleSheet(this->styleSheet());
-    stopWindow->show();
 }
 
 void MainWindow::on_pushButton_4_clicked()
