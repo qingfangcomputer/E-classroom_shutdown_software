@@ -27,7 +27,7 @@
      <string notr="true">font: 16pt &quot;Microsoft YaHei UI&quot;;</string>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;有新版本可以升级，点击现在升级按钮点击链&lt;/p&gt;&lt;p&gt;接加入腾讯频道【庆城县职业中学】，寻找管&lt;/p&gt;&lt;p&gt;理员发布的最新版下载链接。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;有新版本可以升级，点击现在升级按钮点击链&lt;/p&gt;&lt;p&gt;接前往GitHub进行下载，官网下载暂不可使&lt;/p&gt;&lt;p&gt;用，请您谅解。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton">
@@ -89,7 +89,7 @@
      <x>0</x>
      <y>0</y>
      <width>480</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

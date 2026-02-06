@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>E-classroom_shutdown_software 3.0.5</string>
+   <string>E-classroom_shutdown_software 4.2.0</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label_5">
@@ -59,7 +59,7 @@
      <string notr="true">font: 12pt &quot;Microsoft YaHei UI&quot;;</string>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;使用Qt Creator基于C++编写 发布日期:2025年11月22日&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;使用Qt Creator基于C++编写 发布日期:2026年2月6日&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_3">
