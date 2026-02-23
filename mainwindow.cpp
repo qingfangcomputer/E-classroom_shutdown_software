@@ -19,6 +19,8 @@
 #include "up.h"
 #include "versionchecker.h"
 #include "help.h"
+#include "progresswindow.h"  // 确保包含进度窗口头文件
+#include "killprocessthread.h"  // 确保包含线程头文件
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,19 +31,41 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     m_versionChecker = new VersionChecker(this);
 
-    // 连接服务器/版本检查信号（保留）
+    // 保存原始窗口标题（用于追加“有限的体验”）
+    m_originalWindowTitle = this->windowTitle();
+
+    // 连接服务器/版本检查信号（核心：修复服务器离线逻辑+标题追加）
     connect(m_versionChecker, &VersionChecker::serverOnline, this, [=]() {
         qDebug() << "服务器在线";
     });
     connect(m_versionChecker, &VersionChecker::serverOffline, this, [=]() {
-        QMessageBox::critical(this, "服务不可用", "qingfangcomputer.com不在线，无法提供服务<br>或您没有连接到互联网！");
-        QApplication::quit();
+        // 弹出带确定/取消的提示框
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowTitle("服务提示");
+        msgBox.setText("检测到qingfangcomputer.com不在线，将提供有限的服务<br>或您没有连接到互联网！");
+        // 设置按钮文本：确定、取消
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setButtonText(QMessageBox::Ok, "确定");
+        msgBox.setButtonText(QMessageBox::Cancel, "取消");
+        msgBox.setDefaultButton(QMessageBox::Ok);
+
+        // 处理按钮点击
+        int ret = msgBox.exec();
+        if (ret == QMessageBox::Cancel) {
+            // 点击取消：退出应用
+            QApplication::quit();
+        } else if (ret == QMessageBox::Ok) {
+            // 点击确定：追加“有限的体验”到标题
+            QString newTitle = QString("%1 ❌有限的体验").arg(m_originalWindowTitle);
+            this->setWindowTitle(newTitle);
+        }
     });
     connect(m_versionChecker, &VersionChecker::newVersionAvailable, this, &MainWindow::onNewVersionAvailable);
     connect(m_versionChecker, &VersionChecker::noUpdatesAvailable, this, &MainWindow::onNoUpdatesAvailable);
 
     m_versionChecker->checkServerAvailability();
-    m_versionChecker->checkForUpdates("4.2.6");
+    m_versionChecker->checkForUpdates("4.3.1");
     setupUI();
 }
 
@@ -81,43 +105,58 @@ void MainWindow::onThreadFinished()
 {
     if (m_progressWindow) {
         m_progressWindow->finishProgress();
+        m_progressWindow->deleteLater();  // 延迟释放，避免UI卡顿
+        m_progressWindow = nullptr;
     }
     // 重置计数器
     m_clickCount = 0;
     // 释放子线程
-    m_killThread->deleteLater();
-    m_killThread = nullptr;
+    if (m_killThread) {
+        m_killThread->quit();
+        m_killThread->wait();
+        m_killThread->deleteLater();
+        m_killThread = nullptr;
+    }
 }
 
-// 强制执行关闭（核心修改：启动子线程）
+// 强制执行关闭（核心修改：传入QMap类型的进程列表+防止重复点击）
 void MainWindow::forceKillAllClassroomProcesses()
 {
+    // 防止重复点击创建多个线程/窗口
+    if (m_killThread && m_killThread->isRunning()) {
+        QMessageBox::warning(this, "提示", "正在执行进程关闭操作，请等待完成！");
+        return;
+    }
+
     // 创建进度窗口
+    if (m_progressWindow) {
+        m_progressWindow->deleteLater();
+    }
     m_progressWindow = new ProgressWindow(this);
     m_progressWindow->show();
 
-    // 创建子线程（传入进程列表+3轮）
+    // 修正：传入QMap类型的m_classroomProcesses（匹配线程构造函数）
     m_killThread = new KillProcessThread(m_classroomProcesses, 3, this);
     // 连接子线程信号到主窗口槽函数
     connect(m_killThread, &KillProcessThread::logUpdated, this, &MainWindow::onThreadLogUpdated);
     connect(m_killThread, &KillProcessThread::progressUpdated, this, &MainWindow::onThreadProgressUpdated);
     connect(m_killThread, &KillProcessThread::finishedKill, this, &MainWindow::onThreadFinished);
 
-    // 启动子线程（关键：耗时操作在子线程执行，不卡UI）
+    // 启动子线程
     m_killThread->start();
 }
 
-// 核心：关闭按钮点击逻辑（保留，仅调用forceKillAllClassroomProcesses）
+// 核心：关闭按钮点击逻辑（修复QMap迭代器调用）
 void MainWindow::on_commandLinkButton_clicked()
 {
     QString runningClassroom;
     QString runningProcess;
 
-    // 检测运行的电子教室（保留）
+    // 修正：QMap迭代器调用key()/value()（原错误是用了QStringList）
     for (auto it = m_classroomProcesses.constBegin(); it != m_classroomProcesses.constEnd(); ++it) {
-        if (isProcessRunning(it.key())) {
+        if (isProcessRunning(it.key())) {  // QMap迭代器可以调用key()
             runningProcess = it.key();
-            runningClassroom = it.value();
+            runningClassroom = it.value();  // QMap迭代器可以调用value()
             break;
         }
     }
@@ -156,8 +195,7 @@ void MainWindow::on_commandLinkButton_clicked()
     }
 }
 
-// 以下保留原有未修改的函数（listResourceImages、setRandomBackground、resizeEvent、setupUI、onNewVersionAvailable、onNoUpdatesAvailable、on_pushButton_2/3/4_clicked、isProcessRunning、killProcessWithRetry）
-// ===== 以下是原有函数的完整代码 =====
+// 以下函数保持不变，仅确保编译通过
 void MainWindow::listResourceImages(const QString &path, QStringList &outList)
 {
     QDir dir(path);
@@ -268,7 +306,7 @@ void MainWindow::onNewVersionAvailable(QString version)
 
 void MainWindow::onNoUpdatesAvailable()
 {
-    // QMessageBox::information(this, "版本信息", "当前已是最新版本");
+    // 静默处理，不弹窗
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -305,7 +343,6 @@ bool MainWindow::killProcessWithRetry(const QString &processName, int maxRetry)
         if (!isProcessRunning(processName)) {
             return true;
         }
-        // 直接调用子线程的killSingleProcess逻辑（简化）
         QProcess taskkill;
         taskkill.start("taskkill", QStringList() << "/F" << "/T" << "/IM" << processName);
         taskkill.waitForFinished(2000);

@@ -42,12 +42,13 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    ProgressWindow *m_progressWindow;
+    KillProcessThread *m_killThread;
     VersionChecker *m_versionChecker;
-    int m_clickCount = 0;                // 点击计数器
-    ProgressWindow *m_progressWindow;   // 进度窗口
-    KillProcessThread *m_killThread;    // 进程关闭子线程
+    int m_clickCount = 0;  // 点击计数器
+    QString m_originalWindowTitle;  // 保存原始窗口标题（用于追加“有限的体验”）
 
-    // 电子教室进程列表（全局）
+    // 核心修正：统一为QMap类型（进程名 -> 教室软件名称），避免类型冲突
     const QMap<QString, QString> m_classroomProcesses = {
         {"StudentMain.exe", "极域电子教室"},
         {"Student.exe", "红蜘蛛电子教室"},

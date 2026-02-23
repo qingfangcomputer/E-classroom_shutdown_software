@@ -23,6 +23,7 @@ public:
 
 public slots:
     void updateProgress(int value, int maxValue);
+    // 添加日志+自动滚动+强制刷新
     void appendLog(const QString &log);
     void finishProgress();
 
